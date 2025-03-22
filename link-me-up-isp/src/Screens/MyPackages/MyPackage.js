@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./MyPackage.css";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const MyPackage = ({ user }) => {
+
+  const API = BackendURL();
   const ispID = user._id;
 
   const [updateInfo, setInfo] = useState({
@@ -21,7 +24,7 @@ const MyPackage = ({ user }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:9002/Package/GetPackageDetails/${ispID}`)
+      .get(`${API}/Package/GetPackageDetails/${ispID}`)
       .then((response) => {
         setPackageDetails(response.data);
       })
@@ -30,7 +33,7 @@ const MyPackage = ({ user }) => {
       });
 
     axios
-      .get(`http://localhost:9002/Package/GetRejectedPackageDetails/${ispID}`)
+      .get(`${API}/Package/GetRejectedPackageDetails/${ispID}`)
       .then((response) => setRejectedPackageDetails(response.data))
       .catch((error) => {
         console.error(
@@ -56,7 +59,7 @@ const MyPackage = ({ user }) => {
     PackageData.append("PackageProfile", image);
     axios
       .put(
-        `http://localhost:9002/Package/UpdatePackage/${packageID}`,
+        `${API}/Package/UpdatePackage/${packageID}`,
         PackageData
       )
       .then((response) => {
@@ -69,7 +72,7 @@ const MyPackage = ({ user }) => {
 
   const DeletePackage = (packageID) => {
     axios
-      .delete(`http://localhost:9002/Package/DeletePackage/${packageID}`)
+      .delete(`${API}/Package/DeletePackage/${packageID}`)
       .then((response) => alert(response.data.message))
       .catch((error) =>
         console.error("Getting Error in Deleting Package", error)
@@ -105,7 +108,7 @@ const MyPackage = ({ user }) => {
                 <img
                   src={
                     rejectedPackage.packageProfile
-                      ? `http://localhost:9002/ProviderPackages/${rejectedPackage.packageProfile}`
+                      ? `${rejectedPackage.packageProfile}`
                       : "./logon.png"
                   }
                   alt="Rejected Package Profile"
@@ -169,7 +172,7 @@ const MyPackage = ({ user }) => {
                     <img
                       src={
                         packages.packageProfile
-                          ? `http://localhost:9002/ProviderPackages/${packages.packageProfile}`
+                          ? `${packages.packageProfile}`
                           : "./NoImage.jpg"
                       }
                       alt="Package Profile"
@@ -179,7 +182,7 @@ const MyPackage = ({ user }) => {
                       <img
                         src={
                           packages.ispID.ispProfile
-                            ? `http://localhost:9002/Provider/${packages.ispID.ispProfile}`
+                            ? `${packages.ispID.ispProfile}`
                             : "./logon.png"
                         }
                         alt="ISP Profile"

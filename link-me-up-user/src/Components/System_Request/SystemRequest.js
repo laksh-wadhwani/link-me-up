@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./SystemRequest.css";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const SystemRequest = ({user}) => {
+
+  const API = BackendURL();
   const [numSystems, setNumSystems] = useState(0);
   const [specifications, setSpecifications] = useState([]);
   const [address, setAddress] = useState("")
   const [systemReply, setSystemReply] = useState([]);
 
   useEffect(() => {
-    axios.get(`http://localhost:9002/Consumer/SystemReply/${user._id}`)
+    axios.get(`${API}/Consumer/SystemReply/${user._id}`)
     .then(response => setSystemReply(response.data))
     .catch(error => console.error("Getting error in retrieving system reply"+error))
   }, [user._id])
@@ -32,7 +35,7 @@ const SystemRequest = ({user}) => {
   };
 
   const handleSubmit = () => {
-    axios.post(`http://localhost:9002/Consumer/SystemPostRequest/${user._id}`,{specifications, numSystems, address})
+    axios.post(`${API}/Consumer/SystemPostRequest/${user._id}`,{specifications, numSystems, address})
     .then(response => alert(response.data.message))
     .catch(error => console.error("Getting Error in Posting System Request: "+error))
   };

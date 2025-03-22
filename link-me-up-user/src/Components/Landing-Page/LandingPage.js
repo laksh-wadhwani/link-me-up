@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import './LandingPage.css';
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const LandingPage = () => {
 
+  const API = BackendURL();
   const [isContact, setIsContact] = useState(false);
 
   const [contactUs, setContactUs] = useState({
@@ -24,7 +26,7 @@ const LandingPage = () => {
   const SendMessage = () => {
     const {name, email, message} = contactUs;
     if(name&&email&&message){
-      axios.post("http://localhost:9002/Consumer/ContactUs",contactUs)
+      axios.post(`${API}/Consumer/ContactUs`,contactUs)
       .then(response => alert(response.data.message))
       .catch(error => console.error("Getting Erorr in Sending Message: "+error))
     }
@@ -58,7 +60,7 @@ const LandingPage = () => {
           </div>
         </div>
         <div className="section2">
-          <img src="https://www.connect.net.pk/assets/application/public/images/page/img-about.webp" alt="setion2"/>
+        <img src="https://www.connect.net.pk/application/public/images/page/img-about.webp" alt="About Link Me Up"/>
           <div className="section2-box">
             <h1>About <span style={{color: '#2F70B0'}}>Link Me Up</span></h1>
             <p>Established in 2023, Link Me Up is the premier marketplace for Internet and Cable Service Providers. We offer a comprehensive platform for both corporate and consumer sectors to compare and choose the best packages available.</p>
@@ -94,18 +96,18 @@ const LandingPage = () => {
             </div>
 
             <div className="city-box">
-              <Link style={{textDecoration:'none'}} to="/Hyderabad"><img src="./Hyd Box.png" alt="Hyderabad"/></Link>
-              <label className="overlay">Hyderabad</label>
+             <img src="./Hyd Box.png" alt="Hyderabad"/>
+             <Link style={{textDecoration:'none'}} to="/Hyderabad"><label className="overlay">Hyderabad</label></Link>
             </div>
 
             <div className="city-box">
-              <Link style={{textDecoration:'none'}} to="/Lahore"><img src="./Lahore Box.png" alt="Lahore"/></Link>
-              <label className="overlay">Lahore</label>
+              <img src="./Lahore Box.png" alt="Lahore"/>
+              <Link style={{textDecoration:'none'}} to="/Lahore"><label className="overlay">Lahore</label></Link>
             </div>
 
             <div className="city-box">
-              <Link style={{textDecoration:'none'}} to="/Islamabad"><img src="./Islamabad Box.png" alt="Islamabad"/></Link>
-              <label className="overlay">Islamabad</label>
+              <img src="./Islamabad Box.png" alt="Islamabad"/>
+              <Link style={{textDecoration:'none'}} to="/Islamabad"><label className="overlay">Islamabad</label></Link>
             </div>
 
           </div>

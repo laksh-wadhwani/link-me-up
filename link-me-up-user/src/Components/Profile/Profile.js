@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Profile.css";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const Profile = ({user, setLoginUser}) => {
 
+    const API = BackendURL();
     const [updateInfo, setInfo] = useState({
         firstName: "",
         lastName: "",
@@ -83,7 +85,7 @@ const Profile = ({user, setLoginUser}) => {
         console.log(updateInfo)
         const {firstName, lastName, email, phoneNo, newPass} = updateInfo;
         if(isFirstLastNameValid(firstName) || isFirstLastNameValid(lastName) || isEmailValid(email) || isPhoneNoValid(phoneNo) || isPasswordValid(newPass)){
-            axios.put(`http://localhost:9002/Consumer/UpdateInfo/${userID}`, ConsumerData)
+            axios.put(`${API}/Consumer/UpdateInfo/${userID}`, ConsumerData)
             .then(response => {
                 alert(response.data.message)
                 setLoginUser(response.data.user)

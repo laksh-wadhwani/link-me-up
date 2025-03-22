@@ -13,6 +13,7 @@ import SignUp from "./Components/SignUp/SignUp";
 import Profile from "./Components/Profile/Profile"
 import SystemRequest from "./Components/System_Request/SystemRequest"
 import MyPackages from "./Components/My_Packages/MyPackages"
+import { BackendProvider } from "./BackendContext";
 
 
 function App() {
@@ -25,15 +26,15 @@ function App() {
     else { localStorage.removeItem('user') }
   }, [user]);
   return (
-  <>
+  <BackendProvider>
   <Router>
     <Navbar user={user} setLoginUser={setLoginUser}/>
     <Routes>
       <Route exact path="/" element={<LandingPage user={user}/>}/>
       <Route exact path="/Karachi" element={<Karachi user={user}/>}/>
-      <Route exact path="/Lahore" element={<Lahore/>}/>
-      <Route exact path="/Islamabad" element={<Islamabad/>}/>
-      <Route exact path="/Hyderabad" element={<Hyderabad/>}/>
+      <Route exact path="/Lahore" element={<Lahore user={user}/>}/>
+      <Route exact path="/Islamabad" element={<Islamabad user={user}/>}/>
+      <Route exact path="/Hyderabad" element={<Hyderabad user={user}/>}/>
       {(user&&user._id)?
         (<>
           <Route exact path='/Cart/:id' element={<Cart user={user}/>}/>
@@ -49,7 +50,7 @@ function App() {
        }
     </Routes>
   </Router>
-  </>
+  </BackendProvider>
   );
 }
 

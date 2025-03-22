@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import "./cities.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BackendURL } from "../../BackendContext";
+
 
 const Karachi = ({ user }) => {
+
+  const API = BackendURL();
   const naviagte = useNavigate();
 
   const [seeDetails, setSeeDetails] = useState(false);
@@ -18,7 +22,7 @@ const Karachi = ({ user }) => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:9002/Consumer/GetISPANDPACKAGES/karachi")
+      .get(`${API}/Consumer/GetISPANDPACKAGES/karachi`)
       .then((response) => setPackagesDetails(response.data))
       .catch((error) =>
         console.error("Getting Error in retrieving packages details: " + error)
@@ -38,7 +42,7 @@ const Karachi = ({ user }) => {
 
   const AddToCart = (userID, packageID, ispID) =>{
     if(connectionAddress){
-      axios.post(`http://localhost:9002/Cart/AddToCart/${userID}/${packageID}/${ispID}`, {connectionAddress})
+      axios.post(`${API}/Cart/AddToCart/${userID}/${packageID}/${ispID}`, {connectionAddress})
       .then(response => {
         alert(response.data.message)
         naviagte(`/Cart/${userID}`)
@@ -78,7 +82,7 @@ const Karachi = ({ user }) => {
                   <img
                     src={
                       packages.packageProfile
-                        ? `http://localhost:9002/ProviderPackages/${packages.packageProfile}`
+                        ? `${packages.packageProfile}`
                         : "./logon.png"
                     }
                     alt="Package Profile"
@@ -88,7 +92,7 @@ const Karachi = ({ user }) => {
                     <img
                       src={
                         packages.ispID.ispProfile
-                          ? `http://localhost:9002/Provider/${packages.ispID.ispProfile}`
+                          ? `${packages.ispID.ispProfile}`
                           : "./logon.png"
                       }
                       alt="ISP Profile"

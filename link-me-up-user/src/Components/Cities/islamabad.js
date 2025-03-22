@@ -1,36 +1,142 @@
 import React, { useEffect, useState } from "react";
-import './cities.css';
+import "./cities.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { BackendURL } from "../../BackendContext";
 
-const Islamabad=()=>{
 
-    const [ispDetails, setIspDetails] = useState([]);
-    
-    useEffect(()=>{
-        axios.get("http://localhost:9002/renderIsps")
-        .then(response => { 
-            const filteredIsps = response.data.filter(isp => isp.cityName==='islamabad')
-            setIspDetails(filteredIsps); 
-        })
-        .catch(error => alert("Error in fetching ISP's Details", error))
-    },[])
+const Islamabad = ({ user }) => {
 
-    return(
-        <>
-        <div className="cityLine-mainBox">
-            <h1 style={{fontSize: '92px'}} className="cityLine">ISLAMABAD'S BEST ISP'S</h1>
+  const API = BackendURL();
+  const naviagte = useNavigate();
+
+  const [seeDetails, setSeeDetails] = useState(false);
+
+  const [isSubscribe, setIsSubscribe] = useState(false);
+
+  const [selectedISP, setSelectedISP] = useState(null)
+
+  const [packagesDetails, setPackagesDetails] = useState([]);
+
+  const [connectionAddress, setAddress] = useState();
+
+  useEffect(() => {
+    axios
+      .get(`${API}/Consumer/GetISPANDPACKAGES/islamabad`)
+      .then((response) => setPackagesDetails(response.data))
+      .catch((error) =>
+        console.error("Getting Error in retrieving packages details: " + error)
+      );
+  }, []);
+
+  const filteredPackages = selectedISP? packagesDetails.PackageDetails.filter(pkg => pkg.ispID._id === selectedISP):packagesDetails.PackageDetails
+
+  const Subscribe = packageID => {
+    if (user && user._id) {
+      setIsSubscribe(packageID);
+    } else {
+      alert("Please Login First");
+      naviagte("/SignIn");
+    }
+  };
+
+  const AddToCart = (userID, packageID, ispID) =>{
+    if(connectionAddress){
+      axios.post(`${API}/Cart/AddToCart/${userID}/${packageID}/${ispID}`, {connectionAddress})
+      .then(response => {
+        alert(response.data.message)
+        naviagte(`/Cart/${userID}`)
+      })
+      .catch(error => console.error("Getting Error in adding package to the cart"+error))
+    }
+    else alert("Please Enter the Address")
+  };
+
+  return (
+    <React.Fragment>
+      <div
+        className="main-boxx"
+        style={{ alignItems: "flex-start", rowGap: "1rem" }}
+      >
+        <div className="city-line">
+          <h1 style={{fontSize: "92px"}}>Islamabad's Best isp's</h1>
         </div>
-        <div className="ISPBoxes">
-            {ispDetails.map(isp => (
-                <Link style={{textDecoration: 'none'}} to={`/Packages/${isp._id}`}><div key={isp._id} className="ispRender">
-                    <img className="ispRender-picture" src={isp.ispProfile? `http://localhost:9002/${isp.ispName}/${isp.ispProfile}`:"../NoImage.jpg"}alt="ISP's Profile"/>
-                    <h2 className="ispRender-name">{isp.ispName}</h2>
-                </div></Link>
-            ))}
-        </div>
-        </>
-    );
-}
 
-export default Islamabad
+        <div className="isps-filter-component">
+          <button onClick={() => setSelectedISP(null)}>All</button>
+          {packagesDetails.ProviderDetails?.map((isp) => (
+            <button key={isp._id} onClick={() => setSelectedISP(isp._id)}>{isp.ispName}</button>
+          ))}
+        </div>
+
+        <div className="package-display-box">
+          {filteredPackages?.map((packages) => (
+            <div className="actual-package-box" key={packages._id}>
+              {(isSubscribe===packages._id) ? (
+                <React.Fragment>
+                  <textarea placeholder="Address" name="address" value={connectionAddress} onChange={e => setAddress(e.target.value)}/>
+                  <button style={{width:'80%', alignSelf:'center'}} onClick={() => AddToCart(user._id, packages._id, packages.ispID._id)}>Add to Cart</button>
+                </React.Fragment>
+              ) : (
+                <React.Fragment>
+                  <img
+                    src={
+                      packages.packageProfile
+                        ? `${packages.packageProfile}`
+                        : "./logon.png"
+                    }
+                    alt="Package Profile"
+                  />
+
+                  <div className="basic-info">
+                    <img
+                      src={
+                        packages.ispID.ispProfile
+                          ? `${packages.ispID.ispProfile}`
+                          : "./logon.png"
+                      }
+                      alt="ISP Profile"
+                    />
+                    <div>
+                      <h3>{packages.packageName}</h3>
+                      <h5>{packages.ispID?.ispName}</h5>
+                    </div>
+                  </div>
+
+                  <img
+                    src="./dropdown.svg"
+                    alt="Drop Down Icon"
+                    style={{ width: "30px", height: "30px" }}
+                    className="dropDown"
+                    onClick={() => setSeeDetails(packages._id)}
+                  />
+
+                  {seeDetails === packages._id ? (
+                    <React.Fragment>
+                      <div className="further-info">
+                        <h4>
+                          Duration: <span>{packages.duration}</span>
+                        </h4>
+                        <h4>
+                          Price: <span>{packages.price}</span>
+                        </h4>
+                        <h4>Description</h4>
+                        <p>{packages.description}</p>
+                      </div>
+
+                      <div className="btn">
+                        <button onClick={() => Subscribe(packages._id)}>Subscribe</button>
+                      </div>
+                    </React.Fragment>
+                  ) : null}
+                </React.Fragment>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </React.Fragment>
+  );
+};
+
+export default Islamabad;

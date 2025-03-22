@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./SignIn.css";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const SignIn = ({setLoginUser}) => {
 
+    const API = BackendURL();
     const navigate = useNavigate();
     const [user, setUser] = useState({
         email: "",
@@ -24,7 +26,7 @@ const SignIn = ({setLoginUser}) => {
     const SignIn = () => {
         const {email, password} = user;
         if(email && password){
-            axios.post("http://localhost:9002/Provider/SignIn", user)
+            axios.post(`${API}/Provider/SignIn`, user)
             .then(response => {
                 alert(response.data.message)
                 setLoginUser(response.data.user)
@@ -38,7 +40,7 @@ const SignIn = ({setLoginUser}) => {
     const ForgetPassword = () => {
         const {email} = user
         if(email){
-            axios.post("http://localhost:9002/Provider/ForgetPassword", {email})
+            axios.post(`${API}/Provider/ForgetPassword`, {email})
             .then(response => {
                 alert(response.data.message)
                 navigate("/")

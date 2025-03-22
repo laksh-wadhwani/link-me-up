@@ -2,9 +2,11 @@ import React, { useRef, useState } from "react";
 import './SignUp.css';
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const SignUp = () => {
 
+    const API = BackendURL();
     const navigate = useNavigate();
     const [isCreate, setIsCreate] = useState(false)
     const[user, setUser] = useState({
@@ -160,7 +162,7 @@ const SignUp = () => {
         ConsumerData.append("ConsumerProfile", image);
         const {firstName, lastName, email, phoneNo, password} = user
         if(isFirstLastNameValid(firstName) && isFirstLastNameValid(lastName) && isEmailValid(email) && isPhoneNoValid(phoneNo) && isPasswordValid(password)){
-            axios.post("http://localhost:9002/Consumer/SignUp", ConsumerData)
+            axios.post(`${API}/Consumer/SignUp`, ConsumerData)
             .then(response => {
                 alert(response.data.message)
                 setIsCreate(true)
@@ -170,7 +172,7 @@ const SignUp = () => {
     };
 
     const Verify = () => {
-        axios.post("http://localhost:9002/Consumer/VerifyOTP", {finalOTP, email})
+        axios.post(`${API}/Consumer/VerifyOTP`, {finalOTP, email})
         .then(resonse => {
             alert(resonse.data.message)
             setIsCreate(false)

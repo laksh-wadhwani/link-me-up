@@ -55,7 +55,7 @@ const SideBar = ({user, setLoginUser}) => {
                     </button>
                 </div>
                 <div className="admin-card">
-                    <img src={user?.ispProfile? `http://localhost:9002/Provider/${user.ispProfile}`:'./logo.png'} alt="Link Me Up Logo"/>
+                    <img src={user?.ispProfile? `${user.ispProfile}`:'./logo.png'} alt="Link Me Up Logo"/>
                     <div>
                         <h4>{userName}</h4>
                         <h5>Provider</h5>

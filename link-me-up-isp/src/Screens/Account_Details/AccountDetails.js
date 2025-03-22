@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./AccountDetails.css";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const AccountDetails = () => {
 
+    const API = BackendURL();
     const navigate = useNavigate();
     const {email} = useParams();
     const [numAccounts, setNumAccounts] = useState(1);
@@ -31,7 +33,7 @@ const AccountDetails = () => {
 
       const Submit = () => {
         console.log(accounts)
-        axios.put(`http://localhost:9002/Provider/AccountDetails/${email}`,{accounts})
+        axios.put(`${API}/Provider/AccountDetails/${email}`,{accounts})
         .then(response => {
             alert(response.data.message)
             navigate("/")

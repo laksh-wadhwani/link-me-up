@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import "./UploadPackage.css"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BackendURL } from "../../BackendContext";
 
 const UploadPackage = ({user}) => {
 
+    const API = BackendURL();
     const navigate = useNavigate();
     const [uploadPackage, setPackageDetails] = useState({
         ispID: user._id,
@@ -30,7 +32,7 @@ const UploadPackage = ({user}) => {
         PackageData.append("PackageProfile", packageProfile);
         const {ispID, packageName, price, duration, description} = uploadPackage
         if(ispID && packageName && duration && price && description){
-            axios.post("http://localhost:9002/Package/UploadPackage", PackageData)
+            axios.post(`${API}/Package/UploadPackage`, PackageData)
             .then(response => {
                 alert(response.data.message)
                 navigate("/MyPackage")

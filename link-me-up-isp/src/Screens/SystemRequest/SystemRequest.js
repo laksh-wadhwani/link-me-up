@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./SystemRequest.css"
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const SystemRequest = ({user}) => {
 
+  const API = BackendURL();
   const [seeDetails, setSeeDetails] = useState(false);
   const [isReply, setIsReply] = useState(false)
   const [systemDetails, setSystemDetails] = useState([]);
@@ -13,7 +15,7 @@ const SystemRequest = ({user}) => {
   })
 
   useEffect(() => {
-    axios.get(`http://localhost:9002/Provider/SystemPosts/${user._id}`)
+    axios.get(`${API}/Provider/SystemPosts/${user._id}`)
     .then(response => setSystemDetails(response.data))
     .catch(error => console.error("Getting error in retrieving System Requests"+error))
   },[user._id])
@@ -29,7 +31,7 @@ const SystemRequest = ({user}) => {
   const Reply = (detailsID, ispID) => {
     const {price} = replyDetails
     if(price){
-        axios.put(`http://localhost:9002/Provider/SystemReply/${detailsID}/${ispID}`,replyDetails)
+        axios.put(`${API}/Provider/SystemReply/${detailsID}/${ispID}`,replyDetails)
         .then(response => alert(response.data.message))
         .catch(error => console.error("Getting error in replying to a system request: "+error))
     }
@@ -38,7 +40,6 @@ const SystemRequest = ({user}) => {
 
   return (
     <React.Fragment>
-        {console.log(systemDetails)}
       <div className="main-box" style={{ width: "82vw", float: "right" }}>
         <div className="sections-box"style={{ width: "90%", maxHeight: "432px" }}>
           <h2>System Requests</h2>
@@ -60,7 +61,7 @@ const SystemRequest = ({user}) => {
             {systemDetails?.map(details => (
                 <div className="actual-package-box" style={{ padding: "1rem 0" }} key={details._id}>
                 <img
-                  src={details.userID.ConsumerProfile? `http://localhost:9002/Consumer/${details.userID.ConsumerProfile}`:"./NoImage.jpg"}
+                  src={details.userID.ConsumerProfile? `${details.userID.ConsumerProfile}`:"./NoImage.jpg"}
                   alt="Package Profile"
                   onClick={() => setSeeDetails(details._id)}
                   style={{

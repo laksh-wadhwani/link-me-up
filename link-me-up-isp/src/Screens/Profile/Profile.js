@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import "./Profile.css"
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const Profile = ({user, setLoginUser}) => {
 
+    const API = BackendURL();
     const[updateInfo, setInfo] = useState({
         firstName:"",
         lastName:"",
@@ -85,7 +87,7 @@ const Profile = ({user, setLoginUser}) => {
         ISPRegisterdData.append("ProviderProfile", image);
         const {firstName, lastName, email, phoneNo, newPass, currentPass} = updateInfo
         if(isFirstLastNameValid(firstName) || isFirstLastNameValid(lastName) || isEmailValid(email) || isPhoneNoValid(phoneNo) || isPasswordValid(newPass)){
-            axios.put(`http://localhost:9002/Provider/UpdateInfo/${ispID}`, ISPRegisterdData)
+            axios.put(`${API}/Provider/UpdateInfo/${ispID}`, ISPRegisterdData)
             .then(response => {
                 alert(response.data.message)
                 setLoginUser(response.data.user)
@@ -93,7 +95,6 @@ const Profile = ({user, setLoginUser}) => {
             .catch(error => console.error("Getting Error in Sign Up: "+error))
         }
         else alert("Please complete the validations in order to update the information")
-        console.log(currentPass+"\n"+newPass)
     }
 
     return(

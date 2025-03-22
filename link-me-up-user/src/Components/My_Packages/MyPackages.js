@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./MyPackages.css";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const MyPackages = ({ user }) => {
+
+  const API = BackendURL();
   const [receiptDetails, setReceiptDetails] = useState();
 
   useEffect(() => {
     axios
-      .get(`http://localhost:9002/Consumer/GetReceiptForConsumer/${user._id}`)
+      .get(`${API}/Consumer/GetReceiptForConsumer/${user._id}`)
       .then((response) => setReceiptDetails(response.data))
       .catch((error) =>
         console.error("Getting error in retrieving payement details" + error)
@@ -16,7 +19,6 @@ const MyPackages = ({ user }) => {
 
   return (
     <React.Fragment>
-        {console.log(receiptDetails)}
       <div className="main-boxx">
         <div className="receipt-section-box">
           <h1>Receipts</h1>

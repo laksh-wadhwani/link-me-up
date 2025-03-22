@@ -3,8 +3,11 @@ import Modal from "react-modal";
 import "./cart.css";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { BackendURL } from "../../BackendContext";
 
 const Cart = () => {
+
+  const API = BackendURL();
   const { id } = useParams();
   const navigate = useNavigate();
   const [receipt, setReceipt] = useState();
@@ -24,7 +27,7 @@ const Cart = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:9002/Cart/GetCartDetailsForConsumer/${id}`)
+      .get(`${API}/Cart/GetCartDetailsForConsumer/${id}`)
       .then((response) => setCartDetails(response.data))
       .catch((error) =>
         console.error("Getting Error in Package Details in Cart" + error)
@@ -49,7 +52,7 @@ const Cart = () => {
 
   const handleDelete = (cartID) => {
     axios
-      .delete(`http://localhost:9002/Cart/DeletePackageFromCart/${cartID}`)
+      .delete(`${API}/Cart/DeletePackageFromCart/${cartID}`)
       .then((response) => alert(response.data.message))
       .catch((error) =>
         console.error("Getting Error in deleting package from cart" + error)
@@ -67,7 +70,7 @@ const Cart = () => {
       ReceiptData.append('packageIDs',id)
     })
 
-    axios.post(`http://localhost:9002/Consumer/MakePayment/${userID}/${ispID}`,ReceiptData)
+    axios.post(`${API}/Consumer/MakePayment/${userID}/${ispID}`,ReceiptData)
     .then(response => {
       alert(response.data.message)
       closeModal()
@@ -105,7 +108,7 @@ const Cart = () => {
                       <img
                         src={
                           details.packageID.packageProfile
-                            ? `http://localhost:9002/ProviderPackages/${details.packageID.packageProfile}`
+                            ? `${details.packageID.packageProfile}`
                             : "../NoImage.jpg"
                         }
                         alt="Package Profile"

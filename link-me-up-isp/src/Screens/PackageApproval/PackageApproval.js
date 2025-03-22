@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./PackageApproval.css";
 import axios from "axios";
+import { BackendURL } from "../../BackendContext";
 
 const PackageApproval = ({ user }) => {
+
+  const API = BackendURL();
   const [rejectedRemarks, setRemarks] = useState("");
 
   const [seeDetails, setSeeDetails] = useState(false);
@@ -19,14 +22,14 @@ const PackageApproval = ({ user }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:9002/Cart/GetCartDetailsForProvider/${user._id}`)
+      .get(`${API}/Cart/GetCartDetailsForProvider/${user._id}`)
       .then((response) => setApprovalDetails(response.data))
       .catch((error) =>
         console.error("Getting Error in Package Details in Cart" + error)
       );
 
     axios
-      .get(`http://localhost:9002/Cart/GetRejectedPackageDetails/${user._id}`)
+      .get(`${API}/Cart/GetRejectedPackageDetails/${user._id}`)
       .then((response) => setRejectedDetails(response.data))
       .catch((error) =>
         console.error(
@@ -35,7 +38,7 @@ const PackageApproval = ({ user }) => {
       );
 
     axios
-      .get(`http://localhost:9002/Provider/GetReceiptForProvider/${user._id}`)
+      .get(`${API}/Provider/GetReceiptForProvider/${user._id}`)
       .then((response) => setPaymentDetails(response.data))
       .catch((error) =>
         console.error("Getting error in retrieving payment details" + error)
@@ -44,7 +47,7 @@ const PackageApproval = ({ user }) => {
 
   const handleApprove = (cartID) => {
     axios
-      .put(`http://localhost:9002/Cart/PackageApprovalFromProvider/${cartID}`)
+      .put(`${API}/Cart/PackageApprovalFromProvider/${cartID}`)
       .then((response) => alert(response.data.message))
       .catch((error) =>
         console.error("Getting Error in Approving Package" + error)
@@ -55,7 +58,7 @@ const PackageApproval = ({ user }) => {
     if (rejectedRemarks) {
       axios
         .post(
-          `http://localhost:9002/Cart/PackageRejectFromProvider/${user._id}/${packageID}/${userID}`,
+          `${API}/Cart/PackageRejectFromProvider/${user._id}/${packageID}/${userID}`,
           { rejectedRemarks }
         )
         .then((response) => alert(response.data.message))
@@ -68,7 +71,7 @@ const PackageApproval = ({ user }) => {
   const Acknowledge = (transactionID) => {
     axios
       .put(
-        `http://localhost:9002/Provider/PaymentAcknowledgement/${transactionID}`
+        `${API}/Provider/PaymentAcknowledgement/${transactionID}`
       )
       .then((response) => alert(response.data.message))
       .catch((error) =>
@@ -110,7 +113,7 @@ const PackageApproval = ({ user }) => {
                 <img
                   src={
                     details.userID.ConsumerProfile
-                      ? `http://localhost:9002/Consumer/${details.userID.ConsumerProfile}`
+                      ? `${details.userID.ConsumerProfile}`
                       : "./NoImage.kpg"
                   }
                   alt="Rejected Package Profile"
@@ -161,7 +164,7 @@ const PackageApproval = ({ user }) => {
                             <img
                               src={
                                 details.packageID.packageProfile
-                                  ? `http://localhost:9002/ProviderPackages/${details.packageID.packageProfile}`
+                                  ? `${details.packageID.packageProfile}`
                                   : "./NoImage.jpg"
                               }
                               alt="Package Profile"
@@ -171,7 +174,7 @@ const PackageApproval = ({ user }) => {
                               <img
                                 src={
                                   approval.ispID.ispProfile
-                                    ? `http://localhost:9002/Provider/${approval.ispID.ispProfile}`
+                                    ? `${approval.ispID.ispProfile}`
                                     : "./NoImage.jpg"
                                 }
                                 alt="ISP Profile"
