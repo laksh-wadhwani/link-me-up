@@ -111,7 +111,7 @@ const SignIn = async(request, response) => {
 const UpdateInfo = async (request, response) => {
   const { userID } = request.params;
   const { firstName, lastName, email, phoneNo, currentPass, newPass } = request.body;
-  const ConsumerProfile = uploadToCloudinary(request.file.buffer)
+  const ConsumerProfile = await uploadToCloudinary(request.file.buffer)
 
   try {
     const user_check = await userTable.findById(userID);
@@ -215,7 +215,7 @@ const ContactUs = async(request, response) => {
 const MakePayment = async(request, response) => {
   const {userID, ispID} = request.params;
   const {packageIDs} = request.body;
-  const payment_receipt = uploadToCloudinary(request.file.buffer)
+  const payment_receipt = await uploadToCloudinary(request.file.buffer)
   const condition = await Transaction.findById(userID, ispID)
   const packageLength = (packageIDs.length===24)? true: false;
   const userCheck = await ispTable.findById(ispID)

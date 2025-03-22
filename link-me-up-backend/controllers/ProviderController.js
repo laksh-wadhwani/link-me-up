@@ -19,7 +19,7 @@ const SignUp = async(request, response) => {
           cityName,
           address,
         } = request.body;
-        const ispProfile = uploadToCloudinary(request.file.buffer)
+        const ispProfile = await uploadToCloudinary(request.file.buffer)
         const OTP = GenerateOTP();
         console.log(`OTP for ${email}:${OTP}`);
         const otpExpiry = new Date(Date.now() + 1 * 60 * 1000);
@@ -157,7 +157,7 @@ const UpdateInfo = async(request, response) => {
           cityName,
           address,
         } = request.body;
-        const ispProfileUpdated = uploadToCloudinary(request.file.buffer)
+        const ispProfileUpdated = await uploadToCloudinary(request.file.buffer)
         const lowerCaseCityName = cityName.toLowerCase();
         const basicInfo = await ispTable.findById(ispID);
         if (basicInfo) {
