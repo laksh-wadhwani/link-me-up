@@ -1,10 +1,11 @@
 const packagesTable = require('../models/Packages');
 const rejectedPackageTable = require('../models/RejectedPackages');
+const { uploadToCloudinary } = require('../utils/cloudinary');
 
 const UploadPackage = async(request, response) => {
     try {
         const { ispID, packageName, duration, price, description } = request.body;
-        const packageProfile = request.file?.filename;
+        const packageProfile = uploadToCloudinary(request.file.buffer)
         const packageCheck = await packagesTable.findOne({ ispID, packageName });
         const durationInMonths = (duration/30)+" Months"
 
@@ -49,7 +50,7 @@ const UpdatePackage = async(request, response) => {
     try {
         const {packageID} = request.params;
         const { packageName, duration, price, description } = request.body;
-        const updatedPackageProfile = request.file?.filename;
+        const updatedPackageProfile = uploadToCloudinary(request.file.buffer)
         const updatedPackageDetails = await packagesTable.findById(packageID);
         if (updatedPackageDetails) {
           if (packageName) updatedPackageDetails.packageName = packageName;

@@ -5,6 +5,7 @@ const SystemRequest = require('../models/SystemRequest');
 const Transaction  = require('../models/Transaction');
 const userTable = require('../models/Consumer');
 const packagesTable = require('../models/Packages');
+const { uploadToCloudinary } = require('../utils/cloudinary');
 
 const SignUp = async(request, response) => {
     try {
@@ -18,7 +19,7 @@ const SignUp = async(request, response) => {
           cityName,
           address,
         } = request.body;
-        const ispProfile = request.file?.filename;
+        const ispProfile = uploadToCloudinary(request.file.buffer)
         const OTP = GenerateOTP();
         console.log(`OTP for ${email}:${OTP}`);
         const otpExpiry = new Date(Date.now() + 1 * 60 * 1000);
@@ -156,7 +157,7 @@ const UpdateInfo = async(request, response) => {
           cityName,
           address,
         } = request.body;
-        const ispProfileUpdated = request.file?.filename;
+        const ispProfileUpdated = uploadToCloudinary(request.file.buffer)
         const lowerCaseCityName = cityName.toLowerCase();
         const basicInfo = await ispTable.findById(ispID);
         if (basicInfo) {

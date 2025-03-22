@@ -6,11 +6,12 @@ const packagesTable = require("../models/Packages");
 const SystemRequest = require("../models/SystemRequest");
 const Transaction = require("../models/Transaction");
 const cartTable = require("../models/Cart");
+const { uploadToCloudinary } = require("../utils/cloudinary");
 
 const SignUp = async(request, response) => {
     try {
         const { firstName, lastName, email, password, phoneNo } = request.body;
-        const ConsumerProfile = request.file?.filename;
+        const ConsumerProfile = await uploadToCloudinary(request.file.buffer)
         const OTP = GenerateOTP();
         console.log(`OTP for ${email}:${OTP}`);
         const otpExpiry = new Date(Date.now() + 1 * 60 * 1000);
@@ -110,7 +111,7 @@ const SignIn = async(request, response) => {
 const UpdateInfo = async (request, response) => {
   const { userID } = request.params;
   const { firstName, lastName, email, phoneNo, currentPass, newPass } = request.body;
-  const ConsumerProfile = request.file?.filename;
+  const ConsumerProfile = uploadToCloudinary(request.file.buffer)
 
   try {
     const user_check = await userTable.findById(userID);
@@ -214,7 +215,7 @@ const ContactUs = async(request, response) => {
 const MakePayment = async(request, response) => {
   const {userID, ispID} = request.params;
   const {packageIDs} = request.body;
-  const payment_receipt = request.file?.filename;
+  const payment_receipt = uploadToCloudinary(request.file.buffer)
   const condition = await Transaction.findById(userID, ispID)
   const packageLength = (packageIDs.length===24)? true: false;
   const userCheck = await ispTable.findById(ispID)

@@ -2,6 +2,7 @@ const adminTable = require('../models/Admin')
 const ispTable = require("../models/Provider")
 const GenerateOTP = require("../middleware/OTP")
 const transporter = require("../middleware/Mail")
+const {uploadToCloudinary} = require("../utils/cloudinary")
 const rejectedISPTable = require("../models/RejectedProviders")
 const packagesTable = require("../models/Packages")
 const rejectedPackageTable = require("../models/RejectedPackages")
@@ -10,7 +11,7 @@ const SignUp = async(request, response) => {
     try {
         const { firstName, lastName, email, phoneNo, password, secretKey } = request.body;
         const SECRET_KEY = "LINKMEUP2223"
-        const adminProfile = request.file?.filename;
+        const adminProfile = await uploadToCloudinary(request.file.buffer)
         const OTP = GenerateOTP();
         console.log(`OTP for ${email}:${OTP}`);
         const otpExpiry = new Date(Date.now() + 1 * 60 * 1000);

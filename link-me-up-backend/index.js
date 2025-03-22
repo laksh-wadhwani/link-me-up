@@ -8,13 +8,10 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
-app.use(express.static("uploads"));
 dotenv.config();
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/linkMeUpDB',{
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+mongoose.connect(process.env.DB_URL,{
 }).then(() => {
     app.listen(9002, () => {
         console.log("Server is connected and Connected to MongoDB");
@@ -22,6 +19,11 @@ mongoose.connect('mongodb://127.0.0.1:27017/linkMeUpDB',{
 }).catch(error => {
     console.log("Unable to connect Server and/or MongoDB", error);
 });
+
+//Default Route
+app.get("/", (request, response) => {
+    response.json("Backend is working")
+})
 
 // Provider Routes
 const ProviderRouter = require("./routes/ProviderRoutes")

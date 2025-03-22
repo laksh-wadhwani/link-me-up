@@ -2,9 +2,9 @@ const express = require("express")
 const router = express.Router();
 
 const {SignUp, VerifyOTP, SignIn, GetProviderDetailsForApproval, ApproveProvider, RejectProvider, GetAllProvidersDetails, GetPackagesDetailsForApproval, ApprovePackage, RejectPackage, GetAllPackagesDetails, ForgetPassword} = require("../controllers/AdminController")
-const {UploadAdminProfile} = require("../middleware/Multer");
+const upload = require("../middleware/Multer");
 
-router.post("/SignUp", UploadAdminProfile.single("AdminProfile"), SignUp)
+router.post("/SignUp", upload.single("AdminProfile"), SignUp)
 router.post("/VerifyOTP", VerifyOTP)
 router.post("/SignIn", SignIn)
 router.get("/GetProviderDetailsForApproval", GetProviderDetailsForApproval)

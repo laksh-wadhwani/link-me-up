@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const {SignUp, VerifyOTP, UpdateInfo, SignIn, ForgetPassword, SystemPosts, SystemReply, AccountDetails, GetReceiptForProvider, PaymentAcknowledgement} = require("../controllers/ProviderController")
-const {uploadIspProfile} = require("../middleware/Multer")
+const {SignUp, VerifyOTP, UpdateInfo, SignIn, ForgetPassword, SystemPosts, SystemReply, AccountDetails, GetReceiptForProvider, PaymentAcknowledgement} = require("../controllers/ProviderController");
+const upload = require('../middleware/Multer');
 
-router.post("/SignUp", uploadIspProfile.single("ProviderProfile"), SignUp)
+router.post("/SignUp", upload.single("ProviderProfile"), SignUp)
 router.post("/VerifyOTP", VerifyOTP)
-router.put("/UpdateInfo/:ispID", uploadIspProfile.single("ProviderProfile"), UpdateInfo)
+router.put("/UpdateInfo/:ispID", upload.single("ProviderProfile"), UpdateInfo)
 router.post("/SignIn", SignIn)
 router.post("/ForgetPassword", ForgetPassword)
 router.get("/SystemPosts/:ispID", SystemPosts)
